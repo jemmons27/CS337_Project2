@@ -41,12 +41,15 @@ def display_handler(task):
     if re.search(ingredients, task):
         print('show ingredients list\n')
         return
-    quantity = re.compile(r'\b(how much|how many|what amount|quantity)\b', re.IGNORECASE)
+    
+    quantity = re.compile(r'\b(how much(?!\s+time\b)|how many(?!\s+(minutes?|seconds?|hours?)\b)|amount|quantity)\b', re.IGNORECASE)
     if re.search(quantity, task):
         print('find ingredient specified, find quantity, display')
         ##How much [ingredient], how many [ingredient], what amount of [ingredient], what quantity of [ingredient]
+        ##Possible confusions: how much time, how many minutes/seconds/hours
         return
-    time_re = re.compile(r'\b(how long|minute|second|hour|when)\b', re.IGNORECASE)
+    
+    time_re = re.compile(r'\b(how long|minutes?|seconds?|hours?|when|time)\b', re.IGNORECASE)
     #How long do I [process] [ingredient], how many seconds do i [process] ingredient, etc.
     #When is [ingredient/process] done? When do I take [ingredient] out?
     
