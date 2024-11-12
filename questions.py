@@ -9,7 +9,7 @@ def interpret_task(task):
     ##Do we include functionality for multiple recipes in a single session? Ex: I'd like to do another recipe.
     recipe_retrieval = re.compile(r'\b(recipe)\b')
     if re.search(recipe_retrieval, task):
-        url = input("Please input recipe url >")
+        url = input("Please input recipe url > ")
         recipe = fetch_recipe(url)
         return
     
@@ -44,8 +44,12 @@ def display_handler(task):
     quantity = re.compile(r'\b(how much|how many|what amount|quantity)\b', re.IGNORECASE)
     if re.search(quantity, task):
         print('find ingredient specified, find quantity, display')
+        ##How much [ingredient], how many [ingredient], what amount of [ingredient], what quantity of [ingredient]
         return
     time_re = re.compile(r'\b(how long|minute|second|hour|when)\b', re.IGNORECASE)
+    #How long do I [process] [ingredient], how many seconds do i [process] ingredient, etc.
+    #When is [ingredient/process] done? When do I take [ingredient] out?
+    
     if re.search(time_re, task):
         print('find step/process being asked about, return amount of time\n')
         return
@@ -56,6 +60,9 @@ def navigation_handler(task):
     next_step = re.compile(r'\bnext\b', re.IGNORECASE)
     if re.search(next_step, task):
         print('display next step\n')
+    prev_step = re.compile(r'\b(previous|last)\b', re.IGNORECASE)
+    if re.search(prev_step, task):
+        print('display prev step\n')
     ##This is wrong, 'take me to the third step' vs 'take me to the 3rd step' not sure if need to handle
     ##the first
     nth_step = re.compile(r'\b(?:take me to the|go to the|take me to step|go to step) (\d+)', re.IGNORECASE)
@@ -75,6 +82,7 @@ def what_is_handler(task):
     includes_item = re.compile(r'\b(is that|do that|that done)\b.*?', re.IGNORECASE)
     if re.search(includes_item, task):
         print("find relevant task, search ingredient/tool/process\n")
+        ##Look at previous chat history maybe?
         return
     print('search on youtube, can probably use the entire phrase\n')
     return
@@ -85,12 +93,18 @@ def what_is_handler(task):
 def main():
     task = ''
     while task != '0':
-        print("press 0 to exit\n")
-        task = input("Input task >")
+        print("------------press 0 to exit------------")
+        task = input("Input task > ")
         interpret_task(task)
         
 
 
+##Init recipe, then separate function for entering a new recipe
+
+#Structuring the code - storing data in file vs passing it into each function
+
+#How are we storing chat logs/history, if someone asks "What is that?" we need to know what
+#"that" refers to
 
 
 if __name__ == "__main__":
