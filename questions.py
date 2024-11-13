@@ -1,6 +1,9 @@
 import regex as re
 from nav_handler import navigation_handler
 from web_scraping import extract_steps
+from web_scraping import extract_ingredients
+from extract_ingredient import quantity_find_process
+from extract_ingredient import time_find_process
 
 #import web_scraping as ws
 
@@ -50,12 +53,15 @@ def display_handler(task):
     ingredients = re.compile(r'\bingredients\b', re.IGNORECASE)
     ##TODO Dynamic handling for ingredients list, for example if a recipe calls for onions, we need to recognize "How many onions"
     if re.search(ingredients, task):
+        ###TODO add ingredient display from global ing variable
         print('show ingredients list\n')
         return
     
     quantity = re.compile(r'\b(how much(?!\s+time\b)|how many(?!\s+(minutes?|seconds?|hours?)\b)|amount|quantity)\b', re.IGNORECASE)
     if re.search(quantity, task):
         print('find ingredient specified, find quantity, display')
+        ingredients = extract_ingredients()
+        quantity_find_process(task, ingredients)
         ##How much [ingredient], how many [ingredient], what amount of [ingredient], what quantity of [ingredient]
         ##Possible confusions: how much time, how many minutes/seconds/hours
         ##Also the total ingredient needed for recipe vs the amount needed for a specific step
@@ -69,6 +75,7 @@ def display_handler(task):
     
     if re.search(time_re, task):
         print('find step/process being asked about, return amount of time\n')
+        time_find_process(task, ingredients)
         return
     
         
