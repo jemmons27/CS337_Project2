@@ -29,12 +29,14 @@ for item in soup.find_all('li', class_="mm-recipes-structured-ingredients__list-
 # for ingredient in ingredients:
 #     print(ingredient)
 
-content = soup.find(id="mm-recipes-steps__content_1-0")
-#print(steps)
-if content:
-    steps = content.find_all('li')
-    for step in steps:
-        print(step.text)
+def extract_steps():
+    content = soup.find(id="mm-recipes-steps__content_1-0")
+    #print(steps)
+    if content:
+        steps = content.find_all('li')
+        for step in steps:
+            print(step.text)
+    return steps
 
 # Extract data
 # Find all links

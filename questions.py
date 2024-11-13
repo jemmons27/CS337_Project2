@@ -1,4 +1,7 @@
 import regex as re
+from nav_handler import navigation_handler
+from web_scraping import extract_steps
+
 #import web_scraping as ws
 
 def fetch_recipe(url):
@@ -12,6 +15,9 @@ def interpret_task(task):
         url = input("Please input recipe url > ")
         recipe = fetch_recipe(url)
         return
+        '''maybe we can use this python api (https://github.com/remaudcorentin-dev/python-allrecipes)
+        to literally return the recipe (or top three) and recursively call interpret_task(task)
+        -- Jasmine'''
     
     display_re = re.compile(r'\b(show me|how much|how many|how long|when)\b', re.IGNORECASE)
     if re.search(display_re, task):
@@ -21,9 +27,14 @@ def interpret_task(task):
     ##distinguishing between "What temperature" and "What is an oven"
     ## RN need to add handling for "What temperature" and similar queries still
     
-    navigation_re = re.compile(r'\b(take me to|repeat|go to|go back)\b', re.IGNORECASE)
+    navigation_re = re.compile(r'\b(take me to|repeat|go to|go back|what is step)\b', re.IGNORECASE)
     if re.search(navigation_re, task):
-        navigation_handler(task)
+        current_step = 0 
+        ###
+        # #need to implement current_step as a global variable in the "main" fxn later
+        ###
+        step_list = extract_steps()
+        navigation_handler(task, step_list, current_step) 
         print('navigation_handler\n')
         return
     
@@ -47,7 +58,10 @@ def display_handler(task):
         print('find ingredient specified, find quantity, display')
         ##How much [ingredient], how many [ingredient], what amount of [ingredient], what quantity of [ingredient]
         ##Possible confusions: how much time, how many minutes/seconds/hours
+        ##Also the total ingredient needed for recipe vs the amount needed for a specific step
         return
+    
+
     
     time_re = re.compile(r'\b(how long|minutes?|seconds?|hours?|when|time)\b', re.IGNORECASE)
     #How long do I [process] [ingredient], how many seconds do i [process] ingredient, etc.
@@ -59,27 +73,10 @@ def display_handler(task):
     
         
 
-def navigation_handler(task):
-    next_step = re.compile(r'\bnext\b', re.IGNORECASE)
-    if re.search(next_step, task):
-        print('display next step\n')
-    prev_step = re.compile(r'\b(previous|last)\b', re.IGNORECASE)
-    if re.search(prev_step, task):
-        print('display prev step\n')
-    ##This is wrong, 'take me to the third step' vs 'take me to the 3rd step' not sure if need to handle
-    ##the first
-    nth_step = re.compile(r'\b(?:take me to the|go to the|take me to step|go to step) (\d+)', re.IGNORECASE)
-    n = re.search(nth_step, task)
-    if n:
-        n = int(n.group(1))
-        #go_to_step(recipe, step)
-        print('go to step', n)
-    repeat = re.compile(r'\b(repeat|this step)\b', re.IGNORECASE)
-    repeat_flag = re.search(repeat, task)
-    if repeat_flag:
-        #re_print current step
-        print('repeat the current step')
-    return
+# def navigation_handler(task):
+'''Rather than having a function here, it's defined in a separate file, navigation_handler.py. 
+    We can import it from there to use!
+'''
 
 def what_is_handler(task):
     includes_item = re.compile(r'\b(is that|do that|that done)\b.*?', re.IGNORECASE)
