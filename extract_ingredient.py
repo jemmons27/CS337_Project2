@@ -8,18 +8,22 @@ from difflib import SequenceMatcher
         ##Possible confusions: how much time, how many minutes/seconds/hours
         return
         
-'''
-    
+''' 
 ## Maybe should remove stop words from ing names?
 def quantity_find_process(task, ingredients):
+    #TODO specific quantity for a given step, or a given ingredient within a step
+    #Logical concern - Could use the current step if no specific step mentioned, but this doesn't cover
+    #the most general questions like 'How many yams do I boil' if not on a specific step and multiple steps use yams
+    #Question: How to also extract any processes mentioned
     print(ingredients)
     #all trailing,
     has_ingredient = re.compile(r'\b(how many|how much|what quantity of|what amount of)\s+(.*)\b', re.IGNORECASE)
     #has_ingredient = re.compile(r'\b(how many|how much|what quantity of|what amount of)\s+(\w+\s*)', re.IGNORECASE)
     max = 0
-    ##Currently removing trailing words, can change. So "how many sweet potatoes" gives 'sweet' as one group
+    #Does it match the has_ingredient pattern
     ing_search = re.search(has_ingredient, task)
     max = {'diff': 0, 'ing': {}}
+    #Find closest ingredient
     for ing in ingredients:
         res = []
         words_to_keep = ing['name'].split()
@@ -34,12 +38,14 @@ def quantity_find_process(task, ingredients):
             diff = SequenceMatcher(None, ing['name'], filtered_string).ratio()
             if diff > max['diff']:
                 max = {'diff': diff, 'ing': ing}
+                
+                
     closest_match = max['ing']
     if closest_match:
         print("Find quantity of found ingredient term: " + closest_match['name'])
-        print("Use", closest_match['quantity'], closest_match['unit'], 'of', closest_match['name'])
+        print("The recipe requires", closest_match['quantity'], closest_match['unit'], 'of', closest_match['name'])
     else:
-        ##find_process of last output related to ingredients
+        ##TODO find_quantity of last output related to ingredients
         print('no ingredient, refer to previous output/instruction')
     return
 

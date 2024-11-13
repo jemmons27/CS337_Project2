@@ -28,8 +28,10 @@ def extract_ingredients():
             ingredient_info = {
                 'name': re.sub(r',.*$', '', ingredient_name.text),
                 'quantity': quantity.text if quantity else '',
-                'unit': unit.text if unit else ''
+                'unit': unit.text if unit else '',
+                'raw_name': ingredient_name.text
             }
+            print(ingredient_info['raw'])
             ingredients.append(ingredient_info)
     return ingredients
 
