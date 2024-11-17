@@ -27,7 +27,13 @@ def interpret_task(task):
         display_handler(task)
         print('display handler\n') 
     #TODO-------------------------------
-    ##distinguishing between "What temperature" and "What is an oven"
+    ##distinguishing between "What temperature" and "What is an oven
+
+    #What temperature
+    temperature_re = re.compile(r'\b(temperature|heat|degrees|fahrenheit|celsius)\b', re.IGNORECASE)
+    if re.search(temperature_re, task):
+        temperature_handler(task)
+        print('temperature_handler\n')
     ## RN need to add handling for "What temperature" and similar queries still
     
     navigation_re = re.compile(r'\b(take me to|repeat|go to|go back|what is step)\b', re.IGNORECASE)
@@ -78,7 +84,27 @@ def display_handler(task):
         time_find_process(task, ingredients)
         return
     
-        
+
+#temperature handler
+def temperature_handler(task,steps):
+    temperature_re = re.compile(r'\b(\d+)\s*(degrees|°|F|C|Farenheit|Celsius)\b', re.IGNORECASE)
+    tool = re.search(r'\b(oven|stove|burner|pot|pan|grill|microwave)\b', task, re.IGNORECASE)
+    for index, step in enumerate(steps):
+        if tool in step:
+            temperature_match = re.search(temperature_re, task)
+            temperature = temperature_match.group(1)
+            unit = temperature_match.group(2)
+            i = index
+            if temperature_match:
+                print(f'In step {i}, the recipe says the {tool} needs to be set at {temperature} {unit}.')
+            else:
+                level = re.search(r'\b(high|medium-high|medium-low|low)\b', step, re.IGNORECASE)
+                if level:
+                    print(f'In step {i}, the recipe says the {tool} needs to be set to {level.group(1)}')
+    
+
+    if not temperature_match:
+        print(f"The recipe doesn't say what temperature to set the {tool} to.")
 
 # def navigation_handler(task):
 '''Rather than having a function here, it's defined in a separate file, navigation_handler.py. 
