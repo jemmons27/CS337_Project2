@@ -50,18 +50,14 @@ def quantity_find_process(task, ingredients):
     return
 
 
-def time_find_process(task, ingredients, processes=[], step=''):
-    if step == '':
-        step = "Add cumin, paprika, turmeric, oregano, black pepper, and cayenne and cook, stirring, for another 30 to 60 seconds."
-    if processes == []:
-        processes = ['boil', 'broil', 'bake', 'cook', 'sear']
-    ##maybe makes sense to add temperature here
+def time_find_process(task, ingredients, current_step, steps, verbs):
     
     ##has_time_and_unit = re.compile(r'\b\d+\b\s*(minute|minutes|second|seconds|hour|hours|day|days)\b', re.IGNORECASE)
     ##time_unit_search = re.search(has_time_and_unit, task)
     
     has_ingredient = re.compile(r'\b(how long|how many|when)\s+(.*)\b', re.IGNORECASE)
     has_ingredient_search = re.search(has_ingredient, task)
+    print(ingredients)
     closest_match = {}
     if has_ingredient_search:
         ## This is a bit messy if processes and ingredient names are similar, i.e. boil vs olive oil
@@ -87,13 +83,19 @@ def time_find_process(task, ingredients, processes=[], step=''):
         print('Is this the correct ingredient?', closest_match)
     has_process = re.compile(r'\b(do i|should i|can i|done|is)\s+(.*)\b', re.IGNORECASE)
     has_process_search = re.search(has_process, task)
+    processes = []
+    for i in range(len(verbs)):
+        curr = list(verbs[i])
+        for j in range(len(curr)):
+            processes.append(curr[j])
     process_guess = {}
     if has_process:
         max = {'diff': 0, 'process': ''}
         print(has_process_search.group(2))
         for process in processes:
             res = []
-            words_to_keep = process.split()
+            print(process)
+            words_to_keep = str(process).split()
             for word in words_to_keep:
                 if any(word in task_word for task_word in has_process_search.group(2).split()):
                     res.append(word)

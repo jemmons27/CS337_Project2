@@ -23,7 +23,8 @@ extract_steps(soup) - extracts the steps (list of BeautifulSoup Tag objects)
 def main():
     print('Welcome to the Recipe Assistant!')
     recipe_url = input("Please input recipe url > ")
-    soup, steps, ingredients = questions.fetch_recipe(recipe_url)
+    soup, steps, ingredients, verbs = questions.fetch_recipe(recipe_url)
+    print(verbs)
     current_step = 0
     print('Press enter to start the recipe.')
     input()
@@ -33,8 +34,8 @@ def main():
     while current_step < len(steps):
         print('Step', current_step + 1, ':', steps[current_step].text)
         task = input("What would you like to do? Ex. move to a step, ask a question... > ")
-        questions.interpret_task(task, soup)
         current_step += 1
+        questions.interpret_task(task, soup, current_step, steps, ingredients, verbs)
     
 
 main()

@@ -49,29 +49,29 @@ def extract_steps(soup):
     #print(steps)
     if content:
         steps = content.find_all('li')
+        verbs_by_step = []
         for step in steps:
             #print(step.text)
             nlp = spacy.load("en_core_web_sm")
             doc = nlp(step.text)
             verbs = set()
-            print(step.text)
+            #print(step.text)
             for possible_subject in doc:
                 if possible_subject.head.pos == VERB:
                     verbs.add(possible_subject.head)
-                    print(possible_subject.head)
-                    print([child for child in possible_subject.children])
+                    #print(possible_subject.head)
+                    #print([child for child in possible_subject.children])
+            verbs_by_step.append(verbs)
 
-
-
-    return steps
-
-extract_steps()
-
+    return steps, verbs_by_step
 
 
 
 
 
-# s = get_html_make_soup("https://www.allrecipes.com/shakshuka-for-one-recipe-8584907")
-# extract_ingredients(s)
-# extract_steps(s)
+
+
+
+s = get_html_make_soup("https://www.allrecipes.com/shakshuka-for-one-recipe-8584907")
+extract_ingredients(s)
+extract_steps(s)
