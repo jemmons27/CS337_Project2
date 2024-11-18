@@ -1,6 +1,9 @@
 from bs4 import BeautifulSoup
 import requests
 import regex as re
+import spacy
+from spacy.symbols import nsubj, VERB
+from spacy import displacy
 
 # Get HTML from a URL
 # Create a BeautifulSoup object
@@ -46,22 +49,23 @@ def extract_steps(soup):
     #print(steps)
     if content:
         steps = content.find_all('li')
-        # for step in steps:
-        #     print(step.text)
-        return steps
+        for step in steps:
+            #print(step.text)
+            nlp = spacy.load("en_core_web_sm")
+            doc = nlp(step.text)
+            verbs = set()
+            print(step.text)
+            for possible_subject in doc:
+                if possible_subject.head.pos == VERB:
+                    verbs.add(possible_subject.head)
+                    print(possible_subject.head)
+                    print([child for child in possible_subject.children])
 
-# Extract data
-# Find all links
-def extract_links(url):
-    soup = get_html_make_soup(url)
-    links = soup.find_all('a')
-    # for link in links:
-    #     print(link.get('href'))
-# for link in links:
-#     print(link.get('href'))
 
-# Find a specific element
-# title = soup.find('title').text
+
+    return steps
+
+extract_steps()
 
 
 

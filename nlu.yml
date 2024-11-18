@@ -1,0 +1,10 @@
+version: "3.1"
+
+nlu:
+- intent: ask_recipe
+  examples: |
+    - I have a recipe URL @RecipeBot
+    - Here's the recipe link
+    - Can I get the recipe?
+    - I want to know more about this recipe
+    - Here's the URL of the recipe
