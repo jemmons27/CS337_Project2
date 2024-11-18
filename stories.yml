@@ -1,0 +1,8 @@
+# data/stories.yml
+version: "3.1"
+
+stories:
+  - story: ask for recipe URL
+    steps:
+      - intent: ask_recipe
+      - action: utter_ask_recipe

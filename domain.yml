@@ -1,0 +1,27 @@
+version: '3.1'
+
+intents:
+  - ask_recipe
+
+slots:
+  recipe_url:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_text
+
+actions:
+  - action_provide_recipe
+
+responses:
+  utter_ask_recipe:
+    - text: "Please provide the URL of the recipe you'd like to know about."
+
+  utter_no_recipe_found:
+    - text: "I'm sorry, I couldn't find a valid recipe URL in your message. Could you please provide a valid link?"
+
+rules:
+  - rule: Ask for recipe URL
+    steps:
+      - intent: ask_recipe
+      - action: utter_ask_recipe

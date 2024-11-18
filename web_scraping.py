@@ -1,6 +1,10 @@
 from bs4 import BeautifulSoup
 import requests
 import regex as re
+import spacy
+from spacy.symbols import nsubj, VERB
+from spacy import displacy
+
 # Get HTML from a URL
 url = "https://www.allrecipes.com/shakshuka-for-one-recipe-8584907"
 response = requests.get(url)
@@ -45,17 +49,22 @@ def extract_steps():
     if content:
         steps = content.find_all('li')
         for step in steps:
+            #print(step.text)
+            nlp = spacy.load("en_core_web_sm")
+            doc = nlp(step.text)
+            verbs = set()
             print(step.text)
+            for possible_subject in doc:
+                if possible_subject.head.pos == VERB:
+                    verbs.add(possible_subject.head)
+                    print(possible_subject.head)
+                    print([child for child in possible_subject.children])
+
+
+
     return steps
 
-# Extract data
-# Find all links
-links = soup.find_all('a')
-# for link in links:
-#     print(link.get('href'))
-
-# Find a specific element
-title = soup.find('title').text
+extract_steps()
 
 
 
