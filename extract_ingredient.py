@@ -15,7 +15,7 @@ def quantity_find_process(task, ingredients):
     #Logical concern - Could use the current step if no specific step mentioned, but this doesn't cover
     #the most general questions like 'How many yams do I boil' if not on a specific step and multiple steps use yams
     #Question: How to also extract any processes mentioned
-    print(ingredients)
+    # print(ingredients)
     #all trailing,
     has_ingredient = re.compile(r'\b(how many|how much|what quantity of|what amount of)\s+(.*)\b', re.IGNORECASE)
     #has_ingredient = re.compile(r'\b(how many|how much|what quantity of|what amount of)\s+(\w+\s*)', re.IGNORECASE)

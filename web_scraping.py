@@ -1,21 +1,23 @@
 from bs4 import BeautifulSoup
 import requests
 import regex as re
-# Get HTML from a URL
-url = "https://www.allrecipes.com/shakshuka-for-one-recipe-8584907"
-response = requests.get(url)
-html = response.content
 
+# Get HTML from a URL
 # Create a BeautifulSoup object
-soup = BeautifulSoup(html, 'html.parser')
-# Find all ingredient list items and store them in a dictionary
-def extract_ingredients():
-    url = "https://www.allrecipes.com/shakshuka-for-one-recipe-8584907"
+def get_html_make_soup(url):
     response = requests.get(url)
     html = response.content
+    soup = BeautifulSoup(html, 'html.parser')
+    return soup
+
+# Find all ingredient list items and store them in a dictionary
+def extract_ingredients(soup):
+    # url = "https://www.allrecipes.com/shakshuka-for-one-recipe-8584907"
+    # response = requests.get(url)
+    # html = response.content
 
 # Create a BeautifulSoup object
-    soup = BeautifulSoup(html, 'html.parser')
+    # soup = BeautifulSoup(html, 'html.parser')
     ingredients = []
     for item in soup.find_all('li', class_="mm-recipes-structured-ingredients__list-item"):
     # Extract quantity, unit, and ingredient name
@@ -31,7 +33,7 @@ def extract_ingredients():
                 'unit': unit.text if unit else '',
                 'raw_name': ingredient_name.text
             }
-            print(ingredient_info['raw'])
+            # print(ingredient_info)
             ingredients.append(ingredient_info)
     return ingredients
 
@@ -39,25 +41,33 @@ def extract_ingredients():
 # for ingredient in ingredients:
 #     print(ingredient)
 
-def extract_steps():
+def extract_steps(soup):
     content = soup.find(id="mm-recipes-steps__content_1-0")
     #print(steps)
     if content:
         steps = content.find_all('li')
-        for step in steps:
-            print(step.text)
-    return steps
+        # for step in steps:
+        #     print(step.text)
+        return steps
 
 # Extract data
 # Find all links
-links = soup.find_all('a')
+def extract_links(url):
+    soup = get_html_make_soup(url)
+    links = soup.find_all('a')
+    # for link in links:
+    #     print(link.get('href'))
 # for link in links:
 #     print(link.get('href'))
 
 # Find a specific element
-title = soup.find('title').text
+# title = soup.find('title').text
 
 
 
 
 
+
+# s = get_html_make_soup("https://www.allrecipes.com/shakshuka-for-one-recipe-8584907")
+# extract_ingredients(s)
+# extract_steps(s)

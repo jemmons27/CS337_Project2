@@ -2,6 +2,7 @@ import regex as re
 from nav_handler import navigation_handler
 from web_scraping import extract_steps
 from web_scraping import extract_ingredients
+from web_scraping import get_html_make_soup
 from extract_ingredient import quantity_find_process
 from extract_ingredient import time_find_process
 
@@ -9,23 +10,26 @@ from extract_ingredient import time_find_process
 
 def fetch_recipe(url):
     print('web_scraping.py on url', url, 'return recipe\n')
-    return
+    soup = get_html_make_soup(url)
+    steps = extract_steps(soup)
+    ingredients = extract_ingredients(soup)
+    return soup, steps, ingredients
 
-def interpret_task(task):
+def interpret_task(task, soup):
     ##Do we include functionality for multiple recipes in a single session? Ex: I'd like to do another recipe.
-    recipe_retrieval = re.compile(r'\b(recipe)\b')
-    if re.search(recipe_retrieval, task):
-        url = input("Please input recipe url > ")
-        recipe = fetch_recipe(url)
-        return
-        '''maybe we can use this python api (https://github.com/remaudcorentin-dev/python-allrecipes)
-        to literally return the recipe (or top three) and recursively call interpret_task(task)
-        -- Jasmine'''
+    # recipe_retrieval = re.compile(r'\b(recipe)\b')
+    # if re.search(recipe_retrieval, task):
+    #     url = input("Please input recipe url > ")
+    #     recipe = fetch_recipe(url)
+    #     return
+    #     '''maybe we can use this python api (https://github.com/remaudcorentin-dev/python-allrecipes)
+    #     to literally return the recipe (or top three) and recursively call interpret_task(task)
+    #     -- Jasmine'''
     
     display_re = re.compile(r'\b(show me|how much|how many|how long|when)\b', re.IGNORECASE)
     if re.search(display_re, task):
-        display_handler(task)
-        print('display handler\n') 
+        display_handler(task, soup)
+        # print('display handler\n') 
     #TODO-------------------------------
     ##distinguishing between "What temperature" and "What is an oven
 
@@ -42,7 +46,7 @@ def interpret_task(task):
         ###
         # #need to implement current_step as a global variable in the "main" fxn later
         ###
-        step_list = extract_steps()
+        step_list = extract_steps(soup)
         navigation_handler(task, step_list, current_step) 
         print('navigation_handler\n')
         return
@@ -55,7 +59,7 @@ def interpret_task(task):
     return
 
 
-def display_handler(task):
+def display_handler(task,soup):
     ingredients = re.compile(r'\bingredients\b', re.IGNORECASE)
     ##TODO Dynamic handling for ingredients list, for example if a recipe calls for onions, we need to recognize "How many onions"
     if re.search(ingredients, task):
@@ -65,8 +69,8 @@ def display_handler(task):
     
     quantity = re.compile(r'\b(how much(?!\s+time\b)|how many(?!\s+(minutes?|seconds?|hours?)\b)|amount|quantity)\b', re.IGNORECASE)
     if re.search(quantity, task):
-        print('find ingredient specified, find quantity, display')
-        ingredients = extract_ingredients()
+        # print('find ingredient specified, find quantity, display')
+        ingredients = extract_ingredients(soup)
         quantity_find_process(task, ingredients)
         ##How much [ingredient], how many [ingredient], what amount of [ingredient], what quantity of [ingredient]
         ##Possible confusions: how much time, how many minutes/seconds/hours
@@ -98,7 +102,7 @@ def temperature_handler(task,steps):
             if temperature_match:
                 print(f'In step {i}, the recipe says the {tool} needs to be set at {temperature} {unit}.')
             else:
-                level = re.search(r'\b(high|medium-high|medium-low|low)\b', step, re.IGNORECASE)
+                level = re.search(r'\b(high|medium+(?: |-)high|medium (?: |-)low|low)\b', step, re.IGNORECASE)
                 if level:
                     print(f'In step {i}, the recipe says the {tool} needs to be set to {level.group(1)}')
     
