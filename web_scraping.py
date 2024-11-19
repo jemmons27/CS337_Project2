@@ -49,23 +49,43 @@ def extract_steps(soup):
     #print(steps)
     if content:
         steps = content.find_all('li')
+        final_steps = []
+        
         for step in steps:
             #print(step.text)
+            #print(step.text)
+            split = step.text.split(".")
+            for i in split:
+                final_steps.append(i)
+        for i in final_steps:
             nlp = spacy.load("en_core_web_sm")
-            doc = nlp(step.text)
+            doc = nlp(i)
             verbs = set()
-            print(step.text)
-            for possible_subject in doc:
-                if possible_subject.head.pos == VERB:
-                    verbs.add(possible_subject.head)
-                    print(possible_subject.head)
-                    print([child for child in possible_subject.children])
+            cooking_actions = []
+            tools = set()
+            times = []
 
+            for token in doc:
+                # print(token.text, token.pos_, token.dep_)
+                if token.pos_ == "VERB":
+                    cooking_actions.append(token.text)
+    
+                if token.dep_ in {"dobj", "pobj"}:
+                    tools.add(token.text)
 
-
+                if token.dep_ == "nummod" and token.head.text in {"seconds", "minutes", "hours"}:
+                    time_phrase = f"{token.text} {token.head.text}"
+                    if doc[token.i-1].text == "to":
+                        time_phrase = f"{doc[token.i-2].text} to {time_phrase}"
+                    times.append(time_phrase)
+            print(i)
+            print(cooking_actions)
+            print(tools)
+            print(times)
     return steps
 
-extract_steps()
+soup = get_html_make_soup("https://www.allrecipes.com/shakshuka-for-one-recipe-8584907")
+extract_steps(soup)
 
 
 
