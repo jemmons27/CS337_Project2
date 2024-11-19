@@ -92,6 +92,8 @@ extract_steps(soup)
 
 
 
-# s = get_html_make_soup("https://www.allrecipes.com/shakshuka-for-one-recipe-8584907")
-# extract_ingredients(s)
-# extract_steps(s)
+
+
+s = get_html_make_soup("https://www.allrecipes.com/shakshuka-for-one-recipe-8584907")
+extract_ingredients(s)
+extract_steps(s)

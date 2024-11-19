@@ -11,11 +11,11 @@ from extract_ingredient import time_find_process
 def fetch_recipe(url):
     print('web_scraping.py on url', url, 'return recipe\n')
     soup = get_html_make_soup(url)
-    steps = extract_steps(soup)
+    steps, verbs = extract_steps(soup)
     ingredients = extract_ingredients(soup)
-    return soup, steps, ingredients
+    return soup, steps, ingredients, verbs
 
-def interpret_task(task, soup):
+def interpret_task(task, soup, current_step, steps, ingredients, verbs):
     ##Do we include functionality for multiple recipes in a single session? Ex: I'd like to do another recipe.
     # recipe_retrieval = re.compile(r'\b(recipe)\b')
     # if re.search(recipe_retrieval, task):
@@ -28,7 +28,7 @@ def interpret_task(task, soup):
     
     display_re = re.compile(r'\b(show me|how much|how many|how long|when)\b', re.IGNORECASE)
     if re.search(display_re, task):
-        display_handler(task, soup)
+        display_handler(task, soup, ingredients, current_step, steps, verbs)
         # print('display handler\n') 
     #TODO-------------------------------
     ##distinguishing between "What temperature" and "What is an oven
@@ -42,12 +42,11 @@ def interpret_task(task, soup):
     
     navigation_re = re.compile(r'\b(take me to|repeat|go to|go back|what is step)\b', re.IGNORECASE)
     if re.search(navigation_re, task):
-        current_step = 0 
+        current_step = 0 ## Why set to 0? TODO
         ###
         # #need to implement current_step as a global variable in the "main" fxn later
         ###
-        step_list = extract_steps(soup)
-        navigation_handler(task, step_list, current_step) 
+        navigation_handler(task, steps, current_step) 
         print('navigation_handler\n')
         return
     
@@ -59,10 +58,10 @@ def interpret_task(task, soup):
     return
 
 
-def display_handler(task,soup):
-    ingredients = re.compile(r'\bingredients\b', re.IGNORECASE)
+def display_handler(task,soup, ingredients, current_step, steps, verbs):
+    ingredients_re = re.compile(r'\bingredients\b', re.IGNORECASE)
     ##TODO Dynamic handling for ingredients list, for example if a recipe calls for onions, we need to recognize "How many onions"
-    if re.search(ingredients, task):
+    if re.search(ingredients_re, task):
         ###TODO add ingredient display from global ing variable
         print('show ingredients list\n')
         return
@@ -85,7 +84,7 @@ def display_handler(task,soup):
     
     if re.search(time_re, task):
         print('find step/process being asked about, return amount of time\n')
-        time_find_process(task, ingredients)
+        time_find_process(task, ingredients, current_step, steps, verbs)
         return
     
 
