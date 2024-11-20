@@ -17,19 +17,21 @@ def quantity_find_process(task, ingredients):
     #Question: How to also extract any processes mentioned
     # print(ingredients)
     #all trailing,
-    has_ingredient = re.compile(r'\b(how many|how much|what quantity of|what amount of)\s+(.*)\b', re.IGNORECASE)
+    has_ingredient = re.compile(r'\b(how many|how much|what quantity of|what amount of)\s+(.*)\s+(do|should|is|for|does)\b', re.IGNORECASE)
     #has_ingredient = re.compile(r'\b(how many|how much|what quantity of|what amount of)\s+(\w+\s*)', re.IGNORECASE)
-    max = 0
+    max = 0  
     #Does it match the has_ingredient pattern
     ing_search = re.search(has_ingredient, task)
+    print(ing_search.group(2))
     max = {'diff': 0, 'ing': {}}
     #Find closest ingredient
     for ing in ingredients:
         res = []
-        words_to_keep = ing['name'].split()
-        for word in words_to_keep:
-            if any(word in task_word for task_word in ing_search.group(2).split()):
-                res.append(word)
+        diff = SequenceMatcher(None, ing['name'], ing_search.group(2)).ratio()
+        split = ing['name'].split()
+        
+        print(ing['name'])
+        print(diff)
         # Filter the second string to include only words that are in the set
         filtered_string = ' '.join(res)
         
