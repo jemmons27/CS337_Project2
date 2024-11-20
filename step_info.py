@@ -1,4 +1,6 @@
 import regex as re
+from time_query import find_time
+from ingredient_query import find_ingredients
 """
 File containing step_info_handler, which is called for any query asking for specifics on the current step (How many onions do I use)
 
@@ -27,58 +29,4 @@ def step_info_handler(task, steps, current_step, ingredients, last_query):
     
     return current_step, last_query
 
-
-
-
-
-def find_time(task, steps, current_step, ingredients, last_query, referenced_item=''):
-    if referenced_item == '':
-        pass
-    doc = steps[current_step - 1]['doc']
-    response = []
-    rest_of_phrase = False
-    until_re = re.complile(r'\buntil\b', re.IGNORECASE)
-    for token in doc:
-   
-        if rest_of_phrase == False:
-            if (token.pos_ == 'NUM') | (token.dep_ == 'nummod'):
-                response.append(token.text)
-                rest_of_phrase = True
-            elif (re.search(until_re, token.text)):
-                response.append(token.text)
-                rest_of_phrase = True
-        else:
-            response.append(token.text)
-    if (response == []):
-        print('No response found, please restructure your query')
-        return current_step, last_query
-    response = ' '.join(response)
-    print(response)
-    last_query['query'] = task
-    last_query['output'] = response
-    return current_step, last_query
-
-def find_ingredients(task, steps, current_step, ingredients, last_query, referenced_item=''):
-    print("interpreted as a query about the ingredients")
-    recipe_re = re.compile(r'\brecipe\b', re.IGNORECASE)
-    if re.search(recipe_re, task):
-        res = ''
-        for ing in ingredients:
-            if ing['quantity'] != '':
-                res = res + ing['quantity'] + ' '
-            if ing['unit'] != '':
-                res = res + ing['unit'] + ' '
-            if ing['name'] != '':
-                res = res + ing['name']
-            res = res + '\n'
-        print(res)
-        last_query['query'] = task
-        last_query['output'] = res
-    doc = steps[current_step - 1]['doc']
-    #### Restructure ingredient webscraping to remove extra stuff
-    ### Like in example sliced bread, to serve alongside
-    ### or peppers and/or sweet peppers
-    print('UNIMPLEMENTED')    
-    
-    return current_step, last_query
 
