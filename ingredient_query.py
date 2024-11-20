@@ -1,11 +1,11 @@
 import regex as re
-
+import spacy
 
 
 def find_ingredients(task, steps, current_step, ingredients, last_query, referenced_item=''):
     print("interpreted as a query about the ingredients")
     ### Logic for this statement is looking for query with both ingredient(s) and recipes
-    recipe_re = re.compile(r'\b(?=.*\bingredients?\b)(?=.*\brecipe\b).*', re.IGNORECASE)
+    recipe_re = re.compile(r'\b((?=.*\bingredients?\b)(?=.*\brecipe\b).*|ingredients? list)\b', re.IGNORECASE)
     if re.search(recipe_re, task):
         res = ''
         for ing in ingredients:
@@ -35,6 +35,8 @@ def find_ingredients(task, steps, current_step, ingredients, last_query, referen
             if duplicates != []:
                 ingredient_list.append(ingredient_name)
         
+        
+        ##TODO:::::  ADD QUANTITIES if necessary?????
         str = "For this step, you need the following ingredients: \n{"
         for ing in ingredient_list:
             str = str + '\n' + ing
@@ -42,9 +44,56 @@ def find_ingredients(task, steps, current_step, ingredients, last_query, referen
         print(str)
         last_query['query'] = task
         last_query['output'] = str
+        return current_step, last_query
     ###Ingredients for full recipe
     ###Ingredients for step
-    ###Amount of a single ingredient
+    ###Amount of a single ingredient  ##Steps vs total recipe??? Assuming steps for now
+    task = task.rstrip(' ?.,')
+    nlp = spacy.load('en_core_web_sm')
+    doc2 = nlp(task)
+    query_ingredient = ''
+    ingredient_list = []
+    for token in doc2:
+        print(token.text, token.dep_)
+        if token.dep_ == 'dobj': ##If nothing trailing ingredient name, i.e. "how much baking powder?" recognizes powder as root not dobj
+            query_ingredient = token.text
+            break
+        elif token.dep_ == 'ROOT':
+            query_ingredient = token.text
+            break
+    if query_ingredient != '':
+        ingredient_list = [ing for ing in ingredients if query_ingredient in ing['name']]
+    else:
+        print('No ingredient found, More logic to implement?')
+        return current_step, last_query
+    has_amount = False
+    amount = ''
+    for token in doc:
+        if (token.dep_=='nummod') | (token.pos_ == 'NUM'):
+            has_amount = True
+            amount = token.text
+    res = ''
+    if has_amount: ##This needs to be a little better
+        res = res + amount + ' '
+    else:
+        if ingredient_list[0]['quantity'] != '':
+            res = res + ingredient_list[0]['quantity'] + ' '
+    if ingredient_list[0]['unit'] != '':
+        res = res + ingredient_list[0]['unit'] + ' '
+    res = res + ingredient_list[0]['name']
+    print("Use " + res)
+    last_query['query'] = task
+    last_query['output'] = res
+    return current_step, last_query
+        
+            
+    
+    
+    ##How much milk do I need?
+    ###How many cups of milk
+    ## How many unit of x
+    ### How much x do I use?
+    
     
     #### Restructure ingredient webscraping to remove extra stuff
     ### Like in example sliced bread, to serve alongside

@@ -100,25 +100,25 @@ def display_handler(task,soup, ingredients, current_step, steps):
     
 
 #temperature handler
-def temperature_handler(task,steps):
-    temperature_re = re.compile(r'\b(\d+)\s*(degrees|°|F|C|Farenheit|Celsius)\b', re.IGNORECASE)
-    tool = re.search(r'\b(oven|stove|burner|pot|pan|grill|microwave)\b', task, re.IGNORECASE)
-    for index, step in enumerate(steps):
-        if tool in step:
-            temperature_match = re.search(temperature_re, task)
-            temperature = temperature_match.group(1)
-            unit = temperature_match.group(2)
-            i = index
-            if temperature_match:
-                print(f'In step {i}, the recipe says the {tool} needs to be set at {temperature} {unit}.')
-            else:
-                level = re.search(r'\b(high|medium+(?: |-)high|medium (?: |-)low|low)\b', step, re.IGNORECASE)
-                if level:
-                    print(f'In step {i}, the recipe says the {tool} needs to be set to {level.group(1)}')
-    
+    def temperature_handler(task,steps):
+        temperature_re = re.compile(r'\b(\d+)\s*(degrees|°|F|C|Farenheit|Celsius)\b', re.IGNORECASE)
+        tool = re.search(r'\b(oven|stove|burner|pot|pan|grill|microwave)\b', task, re.IGNORECASE)
+        for index, step in enumerate(steps):
+            if tool in step:
+                temperature_match = re.search(temperature_re, task)
+                temperature = temperature_match.group(1)
+                unit = temperature_match.group(2)
+                i = index
+                if temperature_match:
+                    print(f'In step {i}, the recipe says the {tool} needs to be set at {temperature} {unit}.')
+                else:
+                    level = re.search(r'\b(high|medium+(?: |-)high|medium (?: |-)low|low)\b', step, re.IGNORECASE)
+                    if level:
+                        print(f'In step {i}, the recipe says the {tool} needs to be set to {level.group(1)}')
+        
 
-    if not temperature_match:
-        print(f"The recipe doesn't say what temperature to set the {tool} to.")
+        if not temperature_match:
+            print(f"The recipe doesn't say what temperature to set the {tool} to.")
 
 # def navigation_handler(task):
 '''Rather than having a function here, it's defined in a separate file, navigation_handler.py. 
