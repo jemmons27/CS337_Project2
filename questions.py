@@ -3,8 +3,6 @@ from nav_handler import navigation_handler
 from web_scraping import extract_steps, extract_2
 from web_scraping import extract_ingredients
 from web_scraping import get_html_make_soup
-from extract_ingredient import quantity_find_process
-from extract_ingredient import time_find_process
 
 #import web_scraping as ws
 
@@ -83,7 +81,7 @@ def display_handler(task,soup, ingredients, current_step, steps):
     if re.search(quantity, task):
         # print('find ingredient specified, find quantity, display')
         ingredients = extract_ingredients(soup)
-        quantity_find_process(task, ingredients)
+        #quantity_find_process(task, ingredients)
         ##How much [ingredient], how many [ingredient], what amount of [ingredient], what quantity of [ingredient]
         ##Possible confusions: how much time, how many minutes/seconds/hours
         ##Also the total ingredient needed for recipe vs the amount needed for a specific step
@@ -97,7 +95,7 @@ def display_handler(task,soup, ingredients, current_step, steps):
     
     if re.search(time_re, task):
         print('find step/process being asked about, return amount of time\n')
-        time_find_process(task, ingredients, current_step, steps)
+        #time_find_process(task, ingredients, current_step, steps)
         return
     
 
