@@ -8,7 +8,6 @@ def init_test():
     #url = 'https://www.allrecipes.com/shakshuka-for-one-recipe-8584907'
     url = 'https://www.allrecipes.com/recipe/26107/best-breakfast-cookie/'
     #url = 'https://www.allrecipes.com/spicy-turkey-gumbo-recipe-8744687' # url contains the allrecipes url being used
-    print("God damn it... another recipe?") ##TODO remove it!!!!!!!!
     ## Initial parsing of recipe in web_scraping.py
     soup, steps, ingredients = web_scraping.fetch_recipe(url)
     task = '' # Task holds the current query, and is overwritten each time a new query is input
