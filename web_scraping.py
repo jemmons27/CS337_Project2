@@ -92,7 +92,7 @@ def extract_steps(soup):
 
 
 def fetch_recipe(url):
-    print("Fetching recipe data from", url)
+    print("Fetching recipe data from", url, "... ")
     soup = get_html_make_soup(url)
     steps = extract_steps(soup)
     ingredients = extract_ingredients(soup)

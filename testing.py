@@ -17,15 +17,51 @@ def init_test():
     #recent interaction. it is overwritten each time the bot outputs in response to a query
     current_step = 1
     ## curr_step is an int marking current step. Always use curr_step-1 when indexing steps, as "step 1" corresponds to steps[0]
-    while task != '0':
-        print('----- Input 0 to exit -----\n')
-        task = input('Input task > ')
+    
+    print('Welcome to the Recipe Bot! Press enter to start the recipe. Type "0" to exit.')
+    input()
+    print('You need the following ingredients:')
+    for ingredient_info in ingredients:
+        print(ingredient_info['quantity'] + " " + ingredient_info['unit'] + " " + ingredient_info['name'])  
+
+    print('\n')
+    input('Press enter to start cooking!')
+    print('Get ready to cook!\n\n')
+    while current_step <= len(steps) and task != '0':
+        print(f'||| Step {current_step}: {steps[current_step-1]["step"]}\n\n')
+        print(f'Ask a question or ask me to move to a different step!')
+        task = input('||| Type here > ')
         #### Navigate and resolve task, heading first to task_navigation.py at the direct_task function
         current_step, last_query = task_navigation.direct_task(task, soup, current_step, steps, ingredients, last_query)
+    print("You've completed the recipe! Enjoy your meal!")
+    
         
 
 def main():
-    init_test()
+    url = input('Enter a recipe url from Allrecipes.com > ')
+    soup, steps, ingredients = web_scraping.fetch_recipe(url)
+    task = '' # Task holds the current query, and is overwritten each time a new query is input
+    last_query= {'task': task, 'output': ''} #last_query is a dict with keys 'task' and 'output', which store the query and output of the most
+    #recent interaction. it is overwritten each time the bot outputs in response to a query
+    current_step = 1
+    ## curr_step is an int marking current step. Always use curr_step-1 when indexing steps, as "step 1" corresponds to steps[0]
+    
+    print('Welcome to the Recipe Bot! Press enter to start the recipe. Type "0" to exit.')
+    input()
+    print('You need the following ingredients:')
+    for ingredient_info in ingredients:
+        print(ingredient_info['quantity'] + " " + ingredient_info['unit'] + " " + ingredient_info['name'])  
+
+    print('\n')
+    input('Press enter to start cooking!')
+    print('Get ready to cook!\n\n')
+    while current_step <= len(steps) and task != '0':
+        print(f'||| Step {current_step}: {steps[current_step-1]["step"]}\n\n')
+        print(f'Ask a question or ask me to move to a different step!')
+        task = input('||| Type here > ')
+        #### Navigate and resolve task, heading first to task_navigation.py at the direct_task function
+        current_step, last_query = task_navigation.direct_task(task, soup, current_step, steps, ingredients, last_query)
+    print("You've completed the recipe! Enjoy your meal!")
     
     
     

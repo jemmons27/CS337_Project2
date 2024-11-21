@@ -27,6 +27,6 @@ def find_temperature(task, steps, current_step, ingredients, last_query):
       last_query['query'] = task
       last_query['output'] = res
    else:
-      print("Could find a temperature in this step, try another query or navigate to another step")
+      print("Couldn't find a temperature in this step, try another query or navigate to another step")
       
    return current_step, last_query
