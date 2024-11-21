@@ -11,13 +11,6 @@ step_info_handler splits tasks based on if they reference a specific noun/verb o
 returns that information
 """
 def step_info_handler(task, steps, current_step, ingredients, last_query):
-    no_specific_item = re.compile(r"\b(do that|do this|is that|is this|what's that|whats that)\b", re.IGNORECASE)
-    if re.search(no_specific_item, 'a'):
-        print("Step_info_handler found no specific information referenced, parsing last query")
-        referenced_item = '' ### Call a separate function here, which finds the referenced item, then continues
-                             ### with the normal step_info logic
-        print("UNIMPLEMENTED")
-        return current_step, last_query
     
     #### Direct to find_time in time_query.py
     time_re  = re.compile(r"\b(how long|time|minutes?|seconds?|hours?|days?)\b", re.IGNORECASE)

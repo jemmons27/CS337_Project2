@@ -1,4 +1,6 @@
 import regex as re
+import spacy
+from nltk.corpus import verbnet
 #### lookup_re = re.compile(r"\b(what is|what's|whats|define|how do i|how is|show me how to|show me what)\b", re.IGNORECASE)
 
 """
@@ -18,26 +20,25 @@ def lookup_handler(task, steps, current_step, ingredients, last_query):
         if (url_type != '1') & (url_type != '2'):
             url_type = ''
             print("Didn't understand selection. Please try again, entering only a number")
-    no_specific_item = re.compile(r"\b(do that|do this|is that|is this|what's that|whats that)\b", re.IGNORECASE)
+            
+    
+    no_specific_item = re.compile(r"\b(.*)\s+\b(do that|do this|is that|is this|what's that|whats that)\b", re.IGNORECASE)
     if re.search(no_specific_item, task):
         ###lookup last task
         print("Lookup_handler has determined there is no specific task mentioned, parsing last query to find noun/verb to lookup")
-        print("UNIMPLEMENTED")
-        ##### 
-        #
-        #TODO
-        #
-        #####
-        url = ''
+        matches = re.search(no_specific_item, task)
+        last_output = last_query['output'] ### Call a separate function here, which finds the referenced item, then continues
+                  
+                                           ### with the normal step_info logic
+        task = matches.group(1) + last_output
+    tokens = task.split()
+    if url_type == '1':
+        url = "https://www.google.com/search?q="
     else:
-        tokens = task.split()
-        if url_type == '1':
-            url = "https://www.google.com/search?q="
-        else:
-            url = "https://www.youtube.com/results?search_query="
-        for word in tokens:
-            url = url + '+' + word
-        print(url)
+        url = "https://www.youtube.com/results?search_query="
+    for word in tokens:
+        url = url + '+' + word
+    print(url)
     last_query['query'] = task
     last_query['output'] = url
     return current_step, last_query

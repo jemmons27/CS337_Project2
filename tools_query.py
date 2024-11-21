@@ -13,7 +13,7 @@ def find_tools(task, steps, current_step, ingredients, last_query):
 
 
 
-### (det) amod adj -> pobj/dobj/conj NOUN (punct) (cc) ||||| ||| 
+### (det) amod adj -> pobj/dobj/conj NOUN (punct) (cc) ||||| |||
 ### det compound NOUN -> dobj/pobj NOUN punct |||
 ### det amod VERB -> pobj PROPN |
 ### prep ADP pobj NOUN -> dobj NOUN |   probably outlier
@@ -33,3 +33,4 @@ def find_tools(task, steps, current_step, ingredients, last_query):
 ### into a blender: prep ADP, det, pobj NOUN, \b
 ### in a deep-fryer: prep ADP, det, amod ADJ, punct, pobj NOUN
 ### or large saucepan: cc amod ADJ conj NOUN
+### 
