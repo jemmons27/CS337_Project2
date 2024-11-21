@@ -13,13 +13,13 @@ def init_test():
     task = '' # Task holds the current query, and is overwritten each time a new query is input
     last_query= {'task': task, 'output': ''} #last_query is a dict with keys 'task' and 'output', which store the query and output of the most
     #recent interaction. it is overwritten each time the bot outputs in response to a query
-    curr_step = 1
+    current_step = 1
     ## curr_step is an int marking current step. Always use curr_step-1 when indexing steps, as "step 1" corresponds to steps[0]
     while task != '0':
         print('----- Input 0 to exit -----\n')
         task = input('Input task > ')
         #### Navigate and resolve task, heading first to task_navigation.py at the direct_task function
-        curr_step, last_query = task_navigation.direct_task(task, soup, curr_step, steps, ingredients, last_query)
+        current_step, last_query = task_navigation.direct_task(task, soup, current_step, steps, ingredients, last_query)
         
 
 def main():
@@ -33,4 +33,43 @@ if __name__ == "__main__":
     
     
 ###****UNIMPLEMENTED****
-##Lookup where nothing specific is specified IN lookup.py 
+##Lookup where nothing specific is specified IN lookup.py
+
+
+###
+## Brief description/testing
+## Can run testing.py to test, different recipes can be used by replacing the url variable at the top of init_test()
+##
+## init_test calls fetch_recipe from web_scraping.py, then loops through inputs and, 
+## for each one, calls direct_task in task_navigation.py
+##
+## task_navigation.py calls one of the following functions based on what it determines about the task:
+##
+## - navigation_handler from nav_handler.py
+## - lookup_handler from lookup.py
+## - step_info_handler from step_info.py
+## 
+## step_info_handler is for anything related to the 3rd goal from the assignment description. It directs to:
+## find_time in time_query.py
+## find_ingredient in ingredient_query.py
+## find_temperature in temperature_query.py
+## 
+##
+##
+##
+##
+## Nearly every function takes in the same arguments:
+## - task(str): the input query, 
+##
+## - soup: the bs4 object, not sure if this is actually used other than fetch_recipe
+## 
+## - current_step(int): the current step, used to index steps NOTE for step 1, current_step = 1 and step = steps[current_step-1]
+##                                                                 cause it made thinking about it easier for me :O
+## - steps([dict]): list of step dictionaries, which are arranged as follows:
+##   {'index'(int): index, 'step'(str): step text, 'actions'(list): cooking_actions,'tools'(list):tools, 'times'(list):times, 'doc'(spacy object): doc}
+##
+## - ingredients: list of ingredient dictionaries, which are arranged as follows:
+##   {'name'(str): cleaned ing name, 'quantity'(str): listed amount, 'unit'(str):listed unit, 'raw_name'(str): uncleaned name}
+##
+## - last_query(dict): information about the most recent interaction, could easily change to a more robust history if necessary
+##   formatted as {'query':most recent successfully completed task, 'output'(str): the corresponding string output from the bot}

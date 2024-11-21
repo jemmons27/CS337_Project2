@@ -82,10 +82,6 @@ def extract_steps(soup):
                     if doc[token.i-1].text == "to":
                         time_phrase = f"{doc[token.i-2].text} to {time_phrase}"
                     times.append(time_phrase)
-            #print(i)
-            #print(cooking_actions)
-            #print(tools)
-            #print(times)
             step_info = {'index': ind, 'step': i, 'actions': cooking_actions,'tools':tools, 'times':times, 'doc': doc}
             step_data.append(step_info)
             ind += 1

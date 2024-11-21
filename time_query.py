@@ -1,13 +1,11 @@
 import regex as re
 import spacy
 
-def find_time(task, steps, current_step, ingredients, last_query, referenced_item=''):
-    if referenced_item == '':
-        pass
+def find_time(task, steps, current_step, ingredients, last_query):
     doc = steps[current_step - 1]['doc']
     response = []
     rest_of_phrase = False
-    until_re = re.complile(r'\buntil\b', re.IGNORECASE)
+    until_re = re.compile(r'\buntil\b', re.IGNORECASE)
     for token in doc:
    
         if rest_of_phrase == False:
