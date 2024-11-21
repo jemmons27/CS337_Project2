@@ -17,17 +17,20 @@ def step_info_handler(task, steps, current_step, ingredients, last_query):
         print("UNIMPLEMENTED")
         return current_step, last_query
     
-    
+    #### Direct to find_time in time_query.py
     time_re  = re.compile(r"\b(how long|time|minutes?|seconds?|hours?|days?)\b", re.IGNORECASE)
     if re.search(time_re, task):
         referenced_item = ''
         current_step, last_query = find_time(task, steps, current_step, ingredients, last_query, referenced_item)
-        
+    
+    
+    ### Direct toward find_temperature in temperature_query.py
     temperature_re = re.compile(r'\b(temperature|heat|degrees|fahrenheit|celsius|hot|cold|F|C)\b', re.IGNORECASE)  
     if re.search(temperature_re, task):
         referenced_item = ''
         current_step, last_query = find_temperature(task, steps, current_step, ingredients, last_query, referenced_item)
     
+    ### Direct toward find_ingredients in ingredient_query.py
     ingredients_re = re.compile(r"\b(which ingredients|how many|how much|amount|quantity|ingredients)\b", re.IGNORECASE)
     if re.search(ingredients_re, task):
         referenced_item = ''

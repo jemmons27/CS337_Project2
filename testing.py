@@ -9,6 +9,7 @@ def init_test():
     url = 'https://www.allrecipes.com/recipe/26107/best-breakfast-cookie/'
     #url = 'https://www.allrecipes.com/spicy-turkey-gumbo-recipe-8744687' # url contains the allrecipes url being used
     print("God damn it... another recipe?") ##TODO remove it!!!!!!!!
+    ## Initial parsing of recipe in web_scraping.py
     soup, steps, ingredients = web_scraping.fetch_recipe(url)
     task = '' # Task holds the current query, and is overwritten each time a new query is input
     last_query= {'task': task, 'output': ''} #last_query is a dict with keys 'task' and 'output', which store the query and output of the most
@@ -18,6 +19,7 @@ def init_test():
     while task != '0':
         print('----- Input 0 to exit -----\n')
         task = input('Input task > ')
+        #### Navigate and resolve task, heading first to task_navigation.py at the direct_task function
         curr_step, last_query = task_navigation.direct_task(task, soup, curr_step, steps, ingredients, last_query)
         
 

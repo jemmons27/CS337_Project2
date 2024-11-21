@@ -5,7 +5,7 @@ from step_info import step_info_handler
 
 def direct_task(task, soup, current_step, steps, ingredients, last_query):
     navigation_re = re.compile(r'\b(go to|repeat|take me to|go back|next)\b', re.IGNORECASE)
-    ##Navigation check
+    ##Navigation check, Go to nav_handler.py
     if re.search(navigation_re, task):
         ###TODO ERASE PRINT STATEMENT
         ##
@@ -14,7 +14,7 @@ def direct_task(task, soup, current_step, steps, ingredients, last_query):
         return current_step, last_query
     
     lookup_re = re.compile(r"\b(what is|what's|whats|define|how do i|how is|how to|show me what)\b", re.IGNORECASE)
-    ## What is a ?
+    ## Go to lookup.py and run lookup_handler
     if re.search(lookup_re, task):
         print("\nThis has been interpreted as a lookup task")
         current_step, last_query = lookup_handler(task, steps, current_step, ingredients, last_query)
@@ -26,6 +26,9 @@ def direct_task(task, soup, current_step, steps, ingredients, last_query):
     # Temperature: What temperature, how many degrees, set ___ at/to
     # Tools: What do I use to, What do I need
     # Replacement: What can I replace __ with, what can I use instead of ___, can I replace __ with __,
+    
+    
+    ### Go to step_info.py and run step_info_handler
     if re.search(step_info_re, task):
         print("\nThis has been interpreted as a step info task")
         current_step, last_query = step_info_handler(task, steps, current_step, ingredients, last_query)
