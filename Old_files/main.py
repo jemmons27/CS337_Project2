@@ -1,5 +1,5 @@
 ### MAIN FILE : integrates questions.py, extract_ingredient.py, navigation_handler.py, and temperature_handler.py
-import questions
+import Old_files.questions as questions
 
 ##list of functions in questions.py and what they do
 '''

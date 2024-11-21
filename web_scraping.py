@@ -50,23 +50,27 @@ def extract_steps(soup):
     if content:
         steps = content.find_all('li')
         final_steps = []
-        
+        step_data=[]
         for step in steps:
             #print(step.text)
             #print(step.text)
             split = step.text.split(".")
             for i in split:
-                final_steps.append(i)
+                txt = i.lstrip('\n ')
+                if txt != '':
+                    final_steps.append(txt)
+        ind= 0
         for i in final_steps:
             nlp = spacy.load("en_core_web_sm")
             doc = nlp(i)
-            verbs = set()
             cooking_actions = []
             tools = set()
             times = []
 
             for token in doc:
-                # print(token.text, token.pos_, token.dep_)
+                #print(token.text, token.pos_, token.dep_, token.morph)
+                
+                #print(token.dep)
                 if token.pos_ == "VERB":
                     cooking_actions.append(token.text)
     
@@ -78,22 +82,18 @@ def extract_steps(soup):
                     if doc[token.i-1].text == "to":
                         time_phrase = f"{doc[token.i-2].text} to {time_phrase}"
                     times.append(time_phrase)
-            print(i)
-            print(cooking_actions)
-            print(tools)
-            print(times)
-    return steps
+            step_info = {'index': ind, 'step': i, 'actions': cooking_actions,'tools':tools, 'times':times, 'doc': doc}
+            step_data.append(step_info)
+            ind += 1
+    return step_data
 
-soup = get_html_make_soup("https://www.allrecipes.com/shakshuka-for-one-recipe-8584907")
-extract_steps(soup)
-
+#soup = get_html_make_soup("https://www.allrecipes.com/shakshuka-for-one-recipe-8584907")
+#extract_steps(soup)
 
 
-
-
-
-
-
-s = get_html_make_soup("https://www.allrecipes.com/shakshuka-for-one-recipe-8584907")
-extract_ingredients(s)
-extract_steps(s)
+def fetch_recipe(url):
+    print("Fetching recipe data from", url)
+    soup = get_html_make_soup(url)
+    steps = extract_steps(soup)
+    ingredients = extract_ingredients(soup)
+    return soup, steps, ingredients
