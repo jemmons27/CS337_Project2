@@ -2,6 +2,7 @@ import regex as re
 from time_query import find_time
 from ingredient_query import find_ingredients
 from temperature_query import find_temperature
+from tools_query import find_tools
 """
 File containing step_info_handler, which is called for any query asking for specifics on the current step (How many onions do I use)
 by task_navigation.py
@@ -33,7 +34,10 @@ def step_info_handler(task, steps, current_step, ingredients, last_query):
     ingredients_re = re.compile(r"\b(which ingredients|how many|how much|amount|quantity|ingredients)\b", re.IGNORECASE)
     if re.search(ingredients_re, task):
         current_step, last_query = find_ingredients(task, steps, current_step, ingredients, last_query)
-          
+    
+    tools_re = re.compile(r"\b(tools)\b", re.IGNORECASE)
+    if re.search(tools_re, task):
+        current_step, last_query = find_tools(task, steps, current_step, ingredients, last_query)      
     
     return current_step, last_query
 

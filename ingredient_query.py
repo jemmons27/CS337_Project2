@@ -6,8 +6,8 @@ import spacy
 """
 def find_ingredients(task, steps, current_step, ingredients, last_query):
     print("interpreted as a query about the ingredients")
-    ### Logic for this statement is looking for query with both ingredient(s) and recipes
-    recipe_re = re.compile(r'\b((?=.*\bingredients?\b)(?=.*\brecipe\b).*|ingredients? list)\b', re.IGNORECASE)
+    ### Logic for this statement is looking for query with both ingredient(s) and recipe
+    recipe_re = re.compile(r'\b(?!.*\bstep\b)((?=.*\bingredients?\b)(?=.*\brecipe\b).*|ingredients? list)\b', re.IGNORECASE)
     if re.search(recipe_re, task):
         res = ''
         for ing in ingredients:

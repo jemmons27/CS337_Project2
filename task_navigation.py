@@ -20,7 +20,7 @@ def direct_task(task, soup, current_step, steps, ingredients, last_query):
         current_step, last_query = lookup_handler(task, steps, current_step, ingredients, last_query)
         return current_step, last_query
     
-    step_info_re = re.compile(r'\b(how much|how long|temperature|when|what can|replace|how many|time|amount|quantity|ingredients|hot|heat|cold|fahrenheit|celsius|F|C|set|degrees)\b', re.IGNORECASE)
+    step_info_re = re.compile(r'\b(how much|how long|temperature|when|what can|replace|how many|time|amount|quantity|ingredients|hot|heat|cold|fahrenheit|celsius|F|C|set|degrees|tools)\b', re.IGNORECASE)
     # Quantity: How much, how many, what amount, what quantity,
     # Time: How long, how many minutes/seconds/hours, when is ___ done, when do i
     # Temperature: What temperature, how many degrees, set ___ at/to
