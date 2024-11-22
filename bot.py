@@ -114,7 +114,7 @@ async def proceed_to_step(ctx, user_id):
         await ctx.send(f"An error occurred: {e}")
         user_sessions.pop(user_id, None)  # Clear session
 
-bot.run("MTMwOTI1OTExMDc5Mjk1MzkxNw.GJMudx.qOo2eoykO7cai47BIiByB9ildHoO_KOkvLj08I")
+bot.run("TOKEN")
 
 # def main():
 #     url = input('Enter a recipe url from Allrecipes.com > ')
