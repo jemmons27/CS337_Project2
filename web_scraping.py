@@ -54,11 +54,12 @@ def extract_steps(soup):
         for step in steps:
             #print(step.text)
             #print(step.text)
-            split = step.text.split(".")
-            for i in split:
-                txt = i.strip('\n \xa0')
-                if txt != '':
-                    final_steps.append(txt)
+            # Check if the <li> element is inside a <figure> tag
+                split = step.text.split(".")
+                for i in split:
+                    txt = i.strip('\n \xa0')
+                    if txt != '' and 'Allrecipes/' not in txt:
+                        final_steps.append(txt)
         ind= 0
         for i in final_steps:
             nlp = spacy.load("en_core_web_sm")
