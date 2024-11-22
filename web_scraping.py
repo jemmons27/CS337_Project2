@@ -56,7 +56,7 @@ def extract_steps(soup):
             #print(step.text)
             split = step.text.split(".")
             for i in split:
-                txt = i.lstrip('\n ')
+                txt = i.strip('\n \xa0')
                 if txt != '':
                     final_steps.append(txt)
         ind= 0
@@ -84,6 +84,7 @@ def extract_steps(soup):
                     times.append(time_phrase)
             step_info = {'index': ind, 'step': i, 'actions': cooking_actions,'tools':tools, 'times':times, 'doc': doc}
             step_data.append(step_info)
+            print(step_data)
             ind += 1
     return step_data
 

@@ -1,7 +1,7 @@
 import regex as re
 import spacy
 
-def find_time(task, steps, current_step, ingredients, last_query):
+async def find_time(ctx, task, steps, current_step, ingredients, last_query):
     doc = steps[current_step - 1]['doc']
     response = []
     rest_of_phrase = False
@@ -18,10 +18,10 @@ def find_time(task, steps, current_step, ingredients, last_query):
         else:
             response.append(token.text)
     if (response == []):
-        print('No response found, please restructure your query')
+        await ctx.send('No response found, please restructure your query')
         return current_step, last_query
     response = ' '.join(response)
-    print(response)
+    await ctx.send(response)
     last_query['query'] = task
     last_query['output'] = response
     return current_step, last_query

@@ -1,7 +1,7 @@
 import regex as re
 import spacy
 
-def find_temperature(task, steps, current_step, ingredients, last_query):
+async def find_temperature(ctx, task, steps, current_step, ingredients, last_query):
    print("This has been interpreted as a temperature related task")
    nlp = spacy.load('en_core_web_sm')
    tools = re.findall(r'\b(oven|stove|burner|pot|pan|grill|microwave)\b', task, re.IGNORECASE)
@@ -21,7 +21,7 @@ def find_temperature(task, steps, current_step, ingredients, last_query):
          res += temperature + ' '
       if unit:
          res += unit
-      print(res)
+      await ctx.send(res)
       last_query['query'] = task
       last_query['output'] = res
    else:
@@ -33,10 +33,10 @@ def find_temperature(task, steps, current_step, ingredients, last_query):
             if tools:
                 res += 'Set the ' + tools[0] + " to "
             res += level
-            print(res)
+            await ctx.send(res)
             last_query['query'] = task
             last_query['output'] = res
         else:
-            print("Couldn't find a temperature in this step, try another query or navigate to another step")
+            await ctx.send("Couldn't find a temperature in this step, try another query or navigate to another step")
     
    return current_step, last_query

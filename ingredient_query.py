@@ -4,7 +4,7 @@ import spacy
 """
     sorry!!! this is a bit of a gross function
 """
-def find_ingredients(task, steps, current_step, ingredients, last_query):
+async def find_ingredients(ctx, task, steps, current_step, ingredients, last_query):
     print("interpreted as a query about the ingredients")
     ### Logic for this statement is looking for query with both ingredient(s) and recipe
     recipe_re = re.compile(r'\b(?!.*\bstep\b)((?=.*\bingredients?\b)(?=.*\brecipe\b).*|ingredients? list)\b', re.IGNORECASE)
@@ -18,7 +18,7 @@ def find_ingredients(task, steps, current_step, ingredients, last_query):
             if ing['name'] != '':
                 res = res + ing['raw_name']
             res = res + '\n'
-        print(res)
+        await ctx.send(res)
         last_query['query'] = task
         last_query['output'] = res
         return current_step, last_query
@@ -43,7 +43,7 @@ def find_ingredients(task, steps, current_step, ingredients, last_query):
         for ing in ingredient_list:
             str = str + '\n' + ing
         str = str + '\n}'
-        print(str)
+        await ctx.send(str)
         last_query['query'] = task
         last_query['output'] = str
         return current_step, last_query
@@ -66,7 +66,7 @@ def find_ingredients(task, steps, current_step, ingredients, last_query):
     if query_ingredient != '': ## match the query ingredient to one or more from the true list
         ingredient_list = [ing for ing in ingredients if query_ingredient in ing['name']]
     else:
-        print('No ingredient found, More logic to implement?')
+        await ctx.send('No ingredient found, More logic to implement?')
         return current_step, last_query
     has_amount = False
     amount = ''
@@ -85,7 +85,7 @@ def find_ingredients(task, steps, current_step, ingredients, last_query):
     if ingredient_list[0]['unit'] != '':
         res = res + ingredient_list[0]['unit'] + ' '
     res = res + ingredient_list[0]['name']
-    print("Use " + res)
+    await ctx.send("Use " + res)
     last_query['query'] = task
     last_query['output'] = res
     return current_step, last_query
