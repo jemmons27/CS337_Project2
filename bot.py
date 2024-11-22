@@ -51,7 +51,7 @@ async def start_recipe(ctx):
             "steps": steps,
             "ingredients": ingredients,
             "current_step": 1,
-            "last_query": {"task": "", "output": ""}
+            "last_query": {"query": "", "output": ""}
         }
         
         # Send ingredients list
@@ -114,7 +114,7 @@ async def proceed_to_step(ctx, user_id):
         await ctx.send(f"An error occurred: {e}")
         user_sessions.pop(user_id, None)  # Clear session
 
-bot.run(TOKEN)
+bot.run("MTMwOTI1OTExMDc5Mjk1MzkxNw.GJMudx.qOo2eoykO7cai47BIiByB9ildHoO_KOkvLj08I")
 
 # def main():
 #     url = input('Enter a recipe url from Allrecipes.com > ')

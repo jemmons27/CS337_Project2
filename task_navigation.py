@@ -4,7 +4,7 @@ from lookup import lookup_handler
 from step_info import step_info_handler
 
 async def direct_task(ctx, task, soup, current_step, steps, ingredients, last_query):
-    navigation_re = re.compile(r'\b(go to|repeat|take me to|go back|next|previous|step)\b', re.IGNORECASE)
+    navigation_re = re.compile(r'\b(go to|repeat|take me to|go back|next|previous)\b', re.IGNORECASE)
     ##Navigation check, Go to nav_handler.py
     if re.search(navigation_re, task):
         ###TODO ERASE PRINT STATEMENT

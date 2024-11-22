@@ -78,6 +78,8 @@ async def navigation_handler(ctx, task, steps, current_step, last_query):
                     else:
                         await ctx.send(f"Step {n} is out of range. Please try again.")
                         return current_step, last_query
+                    
+    print("HELLO")
     last_query['query'] = task
     last_query['output'] = steps[current_step-1]['step']
     return current_step, last_query

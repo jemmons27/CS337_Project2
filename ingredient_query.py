@@ -11,6 +11,7 @@ async def find_ingredients(ctx, task, steps, current_step, ingredients, last_que
     if re.search(recipe_re, task):
         res = ''
         for ing in ingredients:
+            print(ing)
             if ing['quantity'] != '':
                 res = res + ing['quantity'] + ' '
             if ing['unit'] != '':
@@ -27,6 +28,7 @@ async def find_ingredients(ctx, task, steps, current_step, ingredients, last_que
     step_re = re.compile(r'\b(?=.*\bingredients?\b)(?=.*\bstep\b).*', re.IGNORECASE)
     doc = steps[current_step-1]['doc']
     if re.search(step_re, task):
+        print("HERE")
         step = steps[current_step-1]
         ingredient_list = [ing['name'] for ing in ingredients if ing['name'] in step['step']]
         remaining_ing = [ing['name'] for ing in ingredients if ing['name'] not in step['step']]
@@ -50,7 +52,7 @@ async def find_ingredients(ctx, task, steps, current_step, ingredients, last_que
     ###Ingredients for full recipe
     ###Ingredients for step
     ###Amount of a single ingredient  ##Steps vs total recipe??? Assuming steps for now
-    
+    print("HERE3")
     task = task.rstrip(' ?.,')
     nlp = spacy.load('en_core_web_sm')
     doc2 = nlp(task)
@@ -65,6 +67,7 @@ async def find_ingredients(ctx, task, steps, current_step, ingredients, last_que
             break
     if query_ingredient != '': ## match the query ingredient to one or more from the true list
         ingredient_list = [ing for ing in ingredients if query_ingredient in ing['name']]
+        print(ingredient_list)
     else:
         await ctx.send('No ingredient found, More logic to implement?')
         return current_step, last_query
@@ -77,15 +80,20 @@ async def find_ingredients(ctx, task, steps, current_step, ingredients, last_que
             has_amount = True
             amount = token.text
     res = ''
-    if has_amount: 
-        res = res + amount + ' '
-    else: ## Formatting the output
-        if ingredient_list[0]['quantity'] != '':
+    
+    if len(ingredient_list) > 0:
+        if has_amount: 
+            res = res + amount + ' '
+        elif ingredient_list[0]['quantity'] != '':
             res = res + ingredient_list[0]['quantity'] + ' '
-    if ingredient_list[0]['unit'] != '':
-        res = res + ingredient_list[0]['unit'] + ' '
-    res = res + ingredient_list[0]['name']
-    await ctx.send("Use " + res)
+        if ingredient_list[0]['unit'] != '':
+            res = res + ingredient_list[0]['unit'] + ' '
+        res = res + ingredient_list[0]['name']
+        await ctx.send("Use " + res)
+
+    else: ## Formatting the output
+        await ctx.send("Ingredient not found")
+        
     last_query['query'] = task
     last_query['output'] = res
     return current_step, last_query
